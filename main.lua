@@ -1,17 +1,39 @@
 function main(...)
   local arguments = {...}
-  print("Hello World!")
+
+  local name, err = ask("What's your name? ")
+  if err ~= nil then
+    eprintf("An error occurred while getting input (4): \n", err)
+    return 1
+  end
+  printf("Hello, %s!\n", name)
+
+  return 0
 end
 
-function eprint(message, ...)
-  local args = {...}
-  io.stderr:write(message .. "\t")
-    for i, arg in ipairs(args) do
-        io.stderr:write(tostring(arg) .. "\t")
-    end
-    io.stderr:write("\n")
+function printf(format, ...)
+  io.stdout:write(string.format(format, ...))
+end
+
+function eprintf(format, ...)
+  io.stderr:write(string.format(format, ...))
+end
+
+function ask(question)
+  io.stdout:write(question)
+  local passed, result = pcall(io.stdin.read, io.stdin, "l")
+  if passed then
+    return result, nil
+  end
+  return "", result
 end
 
 ------------------------------------DO NOT TOUCH-----------------------------------------
 
-main()
+local code = main()
+while code < 0 do
+  code = 256 + code
+end
+if code ~= 0 then
+  eprintf("Exited with code %d.\n", code)
+end
