@@ -25,7 +25,7 @@ function ask(question)
   if passed then
     return result, nil
   end
-  return "", result
+  return nil, result
 end
 
 ------------------------------------DO NOT TOUCH-----------------------------------------
